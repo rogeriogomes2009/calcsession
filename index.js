@@ -3,9 +3,17 @@ const express = require('express')
 const app = express()
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
+const session = require('express-session')
+
 const port = process.env.PORT || 3006
 
-app.use(cookieParser())
+//app.use(cookieParser())
+app.use(session ({
+  secret: 'kadoshdev',
+  cookie: {
+    maxAge: 5*60*1000
+}
+}))
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.set('views', path.join(__dirname, 'views'))
@@ -13,8 +21,9 @@ app.set('view engine', 'ejs')
 
 app.get('/', (req, res) => {
   let contas = []
-  if('contas' in req.cookies){
-    contas = req.cookies.contas
+  console.log('session id', req.session.id)
+  if('contas' in req.session){
+    contas = req.session.contas
   }
    res.render('index',{
    contas
@@ -36,13 +45,13 @@ app.post('/calc', (req, res) => {
           total = num1/num2
       }
       let contas = []
-      if('contas' in req.cookies){
-        contas = req.cookies.contas
+      if('contas' in req.session){
+        contas = req.session.contas
       }
       contas.push({
         num1, num2, op, total
       })
-      res.cookie('contas', contas, { maxAge: 2000 })
+      req.session.contas = contas
   res. redirect('/')
 })
 
