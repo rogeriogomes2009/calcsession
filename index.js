@@ -11,7 +11,7 @@ const port = process.env.PORT || 3006
 app.use(session ({
   secret: 'kadoshdev',
   cookie: {
-    maxAge: 5*60*1000
+    maxAge: 10*60*1000
 }
 }))
 app.use(bodyParser.urlencoded({ extended: true }))
